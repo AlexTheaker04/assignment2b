@@ -3,12 +3,10 @@
 import subprocess, sys
 import argparse
 
-
-
 '''
 OPS445 Assignment 2
 Program: duim.py 
-Author: "Student Name"
+Author: "Alex Theaker"
 The python code in this file (duim.py) is original work written by
 "Student Name". No code in this file is copied from any other source 
 except those provided by the course instructor, including any person, 
@@ -19,7 +17,7 @@ violators will be reported and appropriate action will be taken.
 
 Description: <Enter your documentation here>
 
-Date: 
+Date: December 2, 2024
 '''
 
 def parse_command_args():
