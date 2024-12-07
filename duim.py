@@ -35,10 +35,26 @@ def parse_command_args():
 
 def percent_to_graph(percent: int, total_chars: int) -> str:
     "returns a string: eg. '##  ' for 50 if total_chars == 4"
-    pass
+
+    equals = int(round((percent / 100) * total_chars))
+    spaces = total_chars - equals
+    return '=' * equals + ' ' * spaces
 
 def call_du_sub(location: str) -> list:
     "use subprocess to call `du -d 1 + location`, rtrn raw list"
+
+    command = ["du", "-d", "1", location]
+
+    try:
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        stdout, stderr = process.communicate()
+        return stdout.strip().split('\n')
+
+    except:
+        print("Error running du command")
+        return []
+
+
     pass
 
 def create_dir_dict(raw_dat: list) -> dict:
