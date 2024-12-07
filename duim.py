@@ -15,9 +15,12 @@ with anyone or anything except for submission for grading.
 I understand that the Academic Honesty Policy will be enforced and 
 violators will be reported and appropriate action will be taken.
 
-Description: <Enter your documentation here>
+Description: This program runs the du command, which is used to inspect directories.
+What this program does is it improves the output by including a graphical
+representation of the output, as well as it can format the output to be human
+readable.
 
-Date: December 2, 2024
+Date: December 8, 2024
 '''
 
 def parse_command_args():
