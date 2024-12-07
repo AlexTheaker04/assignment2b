@@ -25,7 +25,7 @@ Date: December 8, 2024
 
 def parse_command_args():
     "Set up argparse here. Call this function inside main."
-    parser = argparse.ArgumentParser(description="DU Improved -- See Disk Usage Report with bar charts",epilog="Copyright 2023")
+    parser = argparse.ArgumentParser(description="DU Improved -- See Disk Usage Report with bar charts",epilog="Copyright 2024")
     parser.add_argument("-l", "--length", type=int, default=20, help="Specify the length of the graph. Default is 20.")
     # add argument for "human-readable". USE -H, don't use -h! -h is reserved for --help which is created automatically.
     parser.add_argument("-H", "--human-readable", action="store_true", help="Makes the output size in human readable format")
@@ -62,7 +62,13 @@ def call_du_sub(location: str) -> list:
 
 def create_dir_dict(raw_dat: list) -> dict:
     "get list from du_sub, return dict {'directory': 0} where 0 is size"
-    pass
+    dictionary = {}
+
+    for item in raw_dat:
+        size, path = item.split('\t',1)
+        dictionary[path] = int(size)
+
+    return dictionary
 
 def bytes_to_human_r(kibibytes: int, decimal_places: int=2) -> str:
     "turn 1,024 into 1 MiB, for example"
