@@ -84,5 +84,27 @@ def bytes_to_human_r(kibibytes: int, decimal_places: int=2) -> str:
 
 if __name__ == "__main__":
     args = parse_command_args()
-    pass
 
+    # will need to error check in future
+    target_dir = args.target
+
+    raw_data = call_du_sub(target_dir)
+
+    data = create_dir_dict(raw_data)
+   
+    total_filesize = sum(data.values())
+
+    for filepath, filesize in data.items():
+        percentage = (filesize / total_filesize) * 100 if total_filesize > 0 else 0
+        graph_bar = percent_to_graph(percentage, args.length)
+
+        if args.human_readable:
+            filesize_str = bytes_to_human_r(filesize)
+            total_filesize_str = bytes_to_human_r(total_filesize)
+        else:
+            filesize_str = f"{filesize} B"
+            total_filesize_str = f"{total_filesize} B"
+
+        print(f"{percentage:>3.0f}% [{graph_bar}] {filesize_str}\t{filepath}")
+
+    print(f"Total: {total_filesize_str}   {args.target}")
