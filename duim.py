@@ -98,13 +98,19 @@ if __name__ == "__main__":
         percentage = (filesize / total_filesize) * 100 if total_filesize > 0 else 0
         graph_bar = percent_to_graph(percentage, args.length)
 
+        # add code for coloured output
+        green_start = "\033[92m"
+        light_blue_start = "\033[94m"
+        color_end = "\033[0m"
+        colored_graph_bar = f"{green_start}{graph_bar}{color_end}"
+        colored_filepath = f"{light_blue_start}{filepath}{color_end}"
+
         if args.human_readable:
             filesize_str = bytes_to_human_r(filesize)
             total_filesize_str = bytes_to_human_r(total_filesize)
         else:
             filesize_str = f"{filesize} B"
             total_filesize_str = f"{total_filesize} B"
-
-        print(f"{percentage:>3.0f}% [{graph_bar}] {filesize_str}\t{filepath}")
+        print(f"{percentage:>3.0f}% [{colored_graph_bar}] {filesize_str}\t{colored_filepath}")
 
     print(f"Total: {total_filesize_str}   {args.target}")
