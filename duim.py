@@ -105,12 +105,18 @@ def bytes_to_human_r(kibibytes: int, decimal_places: int=2) -> str:
 if __name__ == "__main__":
     args = parse_command_args()
 
-    # will need to error check in future
     target_dir = args.target
 
-    raw_data = call_du_sub(target_dir)
+    
+    try:
+    
+        raw_data = call_du_sub(target_dir)
+        data = create_dir_dict(raw_data)
 
-    data = create_dir_dict(raw_data)
+    except:
+        print("Error retreving data for:" + args.target)
+        sys.exit(1)
+  
 
     total_filesize = sum(data.values())
 
@@ -125,12 +131,12 @@ if __name__ == "__main__":
         colored_graph_bar = f"{green_start}{graph_bar}{color_end}"
         colored_filepath = f"{light_blue_start}{filepath}{color_end}"
 
-        if args.human_readable:
+        if args.human_readable: # convert output into human readable format if needed
             filesize_str = bytes_to_human_r(filesize)
             total_filesize_str = bytes_to_human_r(total_filesize)
         else:
             filesize_str = f"{filesize} B"
             total_filesize_str = f"{total_filesize} B"
-        print(f"{percentage:>3.0f}% [{colored_graph_bar}] {filesize_str}\t{colored_filepath}")
+        print(f"{percentage:>3.0f}% [{colored_graph_bar}] {filesize_str}\t{colored_filepath}") # combine all of the factors into 1 output
 
     print(f"Total: {total_filesize_str}   {args.target}")
