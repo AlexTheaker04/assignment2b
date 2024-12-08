@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-import subprocess, sys
+import subprocess
+import sys
 import argparse
 
 '''
@@ -24,27 +25,43 @@ Date: December 8, 2024
 '''
 
 def parse_command_args():
-    "Set up argparse here. Call this function inside main."
+    """
+    
+    Used to parse command line arguments
+    
+    """
+
+    # add 3 command line args
     parser = argparse.ArgumentParser(description="DU Improved -- See Disk Usage Report with bar charts",epilog="Copyright 2024")
     parser.add_argument("-l", "--length", type=int, default=20, help="Specify the length of the graph. Default is 20.")
-    # add argument for "human-readable". USE -H, don't use -h! -h is reserved for --help which is created automatically.
     parser.add_argument("-H", "--human-readable", action="store_true", help="Makes the output size in human readable format")
-    # check the docs for an argparse option to store this as a boolean.
+
     # add argument for "target". set number of args to 1.
-    parser.add_argument("target",nargs="?",default=".")
-    args = parser.parse_args()
-    return args
+    parser.add_argument("target",nargs="?",default=".", help="The directory to scan.")
+    arguments = parser.parse_args()
+    return arguments
 
 
 def percent_to_graph(percent: int, total_chars: int) -> str:
-    "returns a string: eg. '##  ' for 50 if total_chars == 4"
+    """
+    
+    returns a string representation of a % based on total chars..
 
-    equals = int(round((percent / 100) * total_chars))
-    spaces = total_chars - equals
+    returns a string: eg. '##  ' for 50 if total_chars == 4
+       
+    """
+
+    equals = int(round((percent / 100) * total_chars)) # find the number of equal signs
+    spaces = total_chars - equals # and then find the empty space needed
     return '=' * equals + ' ' * spaces
 
 def call_du_sub(location: str) -> list:
-    "use subprocess to call `du -d 1 + location`, rtrn raw list"
+    """
+    
+    uses subprocess to call the du command, and will return a list of the output.   
+    
+    
+    """
 
     command = ["du", "-d", "1", location]
 
@@ -57,14 +74,17 @@ def call_du_sub(location: str) -> list:
         print("Error running du command")
         return []
 
-
-    pass
-
 def create_dir_dict(raw_dat: list) -> dict:
-    "get list from du_sub, return dict {'directory': 0} where 0 is size"
+    """
+    
+    takes raw list from du command and will return a dictionary with the
+    directories and the size associated
+       
+    
+    """
     dictionary = {}
 
-    for item in raw_dat:
+    for item in raw_dat: # iterate through the items, splits based on tab char and add them to a dictionary
         size, path = item.split('\t',1)
         dictionary[path] = int(size)
 
@@ -74,7 +94,7 @@ def bytes_to_human_r(kibibytes: int, decimal_places: int=2) -> str:
     "turn 1,024 into 1 MiB, for example"
     suffixes = ['KiB', 'MiB', 'GiB', 'TiB', 'PiB']  # iB indicates 1024
     suf_count = 0
-    result = kibibytes 
+    result = kibibytes
     while result > 1024 and suf_count < len(suffixes):
         result /= 1024
         suf_count += 1
@@ -91,7 +111,7 @@ if __name__ == "__main__":
     raw_data = call_du_sub(target_dir)
 
     data = create_dir_dict(raw_data)
-   
+
     total_filesize = sum(data.values())
 
     for filepath, filesize in data.items():
